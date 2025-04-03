@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.List;
 //데이터베이스의 User 테이블과 매핑되는 엔티티 클래스.
 //@Entity 어노테이션이 붙어 있으며, @Id, @Column 등의 JPA 어노테이션을 사용할 가능성이 높음
 // User 엔터티 클래스, DB의 users 테이블과 매핑
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -35,13 +36,13 @@ public class User implements UserDetails { // UserDetails를 상속받아 인증
     @Column(name = "password", nullable = false)
     private String password;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String gender; // ✅ 성별
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String birthDate; // ✅ 생년월일
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String job; // ✅ 직업
 
     @Column(nullable = false)
@@ -59,9 +60,9 @@ public class User implements UserDetails { // UserDetails를 상속받아 인증
     }
 
 
-    @Override // 권한 반환
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("user"));
+        return List.of(new SimpleGrantedAuthority(this.role)); // ✅ 고침
     }
 
     @Override

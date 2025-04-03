@@ -7,7 +7,7 @@ import com.example.demo.dto.LoginRequest;
 import com.example.demo.model.User;
 import com.example.demo.security.JwtUtil;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.FieldError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,8 +48,12 @@ public class UserApiController {
     @PostMapping("/user")
     public ResponseEntity<?> signup(@Valid @RequestBody AddUserRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            String errorMessages = bindingResult.getFieldErrors().stream()
+                    .map(FieldError::getDefaultMessage)
+                    .reduce((msg1, msg2) -> msg1 + ", " + msg2)
+                    .orElse("회원가입 실패: 입력값을 확인해주세요.");
             return ResponseEntity.badRequest().body(Map.of(
-                    "message", "회원가입 실패: 입력값을 확인해주세요."
+                    "message", errorMessages
             ));
         }
 

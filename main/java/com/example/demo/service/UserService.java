@@ -4,6 +4,7 @@ import com.example.demo.dto.LoginRequest;
 import com.example.demo.model.Token;
 import com.example.demo.repository.TokenRepository;
 import com.example.demo.security.JwtUtil;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -104,5 +105,28 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email));
+    }
+    public Long getCurrentUserId() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+            String email = userDetails.getUsername();
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
+            return user.getId();
+        }
+
+        throw new RuntimeException("인증된 사용자가 아닙니다.");
+    }
+    public User getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+            String email = userDetails.getUsername();
+            return userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
+        }
+
+        throw new RuntimeException("인증된 사용자가 아닙니다.");
     }
 }	

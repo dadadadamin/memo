@@ -23,16 +23,12 @@ public class AddUserRequest {
     
     @NotBlank(message = "비밀번호 확인을 입력해주세요.")
     private String passwordConfirm; // ✅ 비밀번호 확인 필드 추가
-    
-    @NotBlank(message = "성별을 입력해주세요.")
-    @Pattern(regexp = "^(남|여)$", message = "성별은 '남' 또는 '여'만 입력 가능합니다.")
-    private String gender;  // ✅ 성별 (남, 여)
 
-    @NotBlank(message = "생년월일을 입력해주세요.")
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "생년월일은 YYYY-MM-DD 형식으로 입력해주세요.")
-    private String birthDate;  // ✅ 생년월일 (YYYY-MM-DD)
+    private String gender;
 
-    @NotBlank(message = "직업을 입력해주세요.")
+    private String birthDate; // ✅ 생년월일 (YYYY-MM-DD)
+
+
     @Size(max = 50, message = "직업은 최대 50자까지 입력 가능합니다.")
     private String job;  // ✅ 직업
 }
