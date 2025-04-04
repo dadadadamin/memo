@@ -31,9 +31,6 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
-    }
     public Long findUserIdByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."))
