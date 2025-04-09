@@ -99,5 +99,10 @@ public class User implements UserDetails { // UserDetails를 상속받아 인증
     public boolean isEnabled(){
         return true; // true -> 사용 가능
     }
+
+    // User.java 하단에 추가
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
 
