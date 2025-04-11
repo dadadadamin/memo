@@ -26,6 +26,21 @@ public class Memo {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+    // llm 결과 컬럼 추가
+    @Column(columnDefinition = "TEXT")
+    private String travelInfoJson;
+
+    @Column(length = 255)
+    private String weatherInfo;
+
+    @Column(length = 255)
+    private String mapLocation;
+
+    @Column(length = 255)
+    private String reservationSuggestion;
+
+    @Column
+    private Integer estimatedCost;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
