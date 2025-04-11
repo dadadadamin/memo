@@ -14,3 +14,4 @@ capstone-back
 4/11
 - 비밀번호 재설정 테스트 완료 및 깃허브 업로드 완료
 - 첫번째 디렉토리가 main인 디렉토리가 아닌 src 디렉토리로 들어갈 것
+- src/main/java/com/example/demo/
