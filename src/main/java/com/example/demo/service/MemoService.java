@@ -28,9 +28,10 @@ public class MemoService {
         this.folderRepository = folderRepository;
     }
 
-    public MemoResponse createMemo(MemoRequest request, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public MemoResponse createMemo(MemoRequest request, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found by email: " + email));
+
         Folder folder = folderRepository.findById(request.getFolderId())
                 .orElseThrow(() -> new RuntimeException("Folder not found"));
 
@@ -45,12 +46,13 @@ public class MemoService {
         Memo saved = memoRepository.save(memo);
         return convertToResponse(saved);
     }
-    public MemoResponse createQuickMemo(MemoRequest request, Long userId) {
-        User user = userRepository.findById(userId)
+
+    public MemoResponse createQuickMemo(MemoRequest request, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // ✅ default 폴더 자동 생성 or 조회
-        Folder folder = folderRepository.findByUserIdAndName(userId, "default")
+        // default 폴더 자동 생성 or 조회
+        Folder folder = folderRepository.findByUserIdAndName(user.getId(), "default")
                 .orElseGet(() -> {
                     Folder defaultFolder = new Folder();
                     defaultFolder.setName("default");
@@ -73,9 +75,8 @@ public class MemoService {
     }
 
 
-    public List<MemoResponse> getUserMemos(Long userId) {
-        return memoRepository.findAllByUserId(userId)
-                .stream()
+    public List<MemoResponse> getMemosByFolder(Long folderId) {
+        return memoRepository.findAllByFolderId(folderId).stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
@@ -91,6 +92,12 @@ public class MemoService {
 
         Memo updated = memoRepository.save(memo);
         return convertToResponse(updated);
+    }
+
+    public void deleteMemo(Long id) {
+        Memo memo = memoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Memo not found"));
+        memoRepository.delete(memo);
     }
 
     private MemoResponse convertToResponse(Memo memo) {

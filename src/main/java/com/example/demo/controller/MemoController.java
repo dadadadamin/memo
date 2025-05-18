@@ -7,32 +7,46 @@ import com.example.demo.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/memos")
+@RequiredArgsConstructor
 public class MemoController {
 
     private final MemoService memoService;
 
-    public MemoController(MemoService memoService) {
-        this.memoService = memoService;
-    }
 
     // MemoController.java
     @PostMapping("/quick")
     public ResponseEntity<?> saveQuickMemo(@RequestBody MemoRequest request,
-                                           @RequestParam Long userId) {
-        return ResponseEntity.ok(memoService.createQuickMemo(request, userId));
+                                           Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(memoService.createQuickMemo(request, email));
     }
+
     @PostMapping
-    public ResponseEntity<MemoResponse> createMemo(@RequestBody MemoRequest request, @RequestParam Long userId) {
-        return ResponseEntity.ok(memoService.createMemo(request, userId));
+    public ResponseEntity<MemoResponse> createMemo(@RequestBody MemoRequest request, Authentication authentication) {
+        String email = authentication.getName(); // JWT에서 추출된 이메일
+        return ResponseEntity.ok(memoService.createMemo(request, email));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MemoResponse>> getMemos(@RequestParam Long folderId) {
+        List<MemoResponse> memos = memoService.getMemosByFolder(folderId);
+        return ResponseEntity.ok(memos);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<MemoResponse> updateMemo(@PathVariable Long id, @RequestBody MemoRequest request) {
         return ResponseEntity.ok(memoService.updateMemo(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteMemo(@PathVariable Long id) {
+        memoService.deleteMemo(id);
+        return ResponseEntity.ok().build();
     }
 }

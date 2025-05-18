@@ -47,11 +47,10 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/signup", "/user", "/api/password/**", "/api/translate", "/api/memos", "/api/memos/quick").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/folders/**").authenticated()
-
+                        .requestMatchers("/login", "/signup", "/user", "/api/password/**", "/api/translate", "/api/memos", "/api/memos/quick", "/api/memos/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/folders/**", "/api/memos/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/user/{id}").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/folders/**").authenticated()
+                        .requestMatchers("/api/folders/**", "/api/memos/quick").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
                         .anyRequest().authenticated()
                 )
