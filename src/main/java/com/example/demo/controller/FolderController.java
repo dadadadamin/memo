@@ -8,6 +8,7 @@ import com.example.demo.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,8 +27,10 @@ public class FolderController {
     }
 
     @PostMapping("/quick")
-    public ResponseEntity<?> saveQuickMemo(@RequestBody MemoRequest request, @RequestParam Long userId) {
-        return ResponseEntity.ok(memoService.createQuickMemo(request, userId));
+    public ResponseEntity<?> saveQuickMemo(@RequestBody MemoRequest request,
+                                           Authentication authentication) {
+        String email = authentication.getName(); // ✅ JWT에서 추출한 사용자 email
+        return ResponseEntity.ok(memoService.createQuickMemo(request, email));
     }
 
 
