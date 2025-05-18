@@ -35,11 +35,11 @@ public class FolderController {
     public ResponseEntity<?> listFolders() {
         return ResponseEntity.ok(folderService.getAllFolders());
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteFolder(@PathVariable Long id) {
         folderService.deleteFolder(id);
         return ResponseEntity.ok().build();
     }
+
 }
 

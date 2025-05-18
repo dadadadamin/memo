@@ -49,6 +49,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/signup", "/user", "/api/password/**", "/api/translate", "/api/memos", "/api/memos/quick").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/folders/**").authenticated()
+
                         .requestMatchers(HttpMethod.DELETE, "/user/{id}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/folders/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
