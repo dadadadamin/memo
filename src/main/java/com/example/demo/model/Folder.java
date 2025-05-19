@@ -27,6 +27,9 @@ public class Folder {
 
     private Integer sortOrder = 0;
 
+    private String color; // 예: "#FFAABB"
+    private String imageUrl; // 예: "https://.../folder1.png"
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

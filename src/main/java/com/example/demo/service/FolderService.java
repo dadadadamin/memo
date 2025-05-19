@@ -41,7 +41,7 @@ public class FolderService {
     public List<Folder> getAllFolders() {
         return folderRepository.findByUserId(userService.getCurrentUser().getId());
     }
-<<<<<<< Updated upstream
+
 
     public void deleteFolder(Long folderId) {
         User user = userService.getCurrentUser();
@@ -57,7 +57,6 @@ public class FolderService {
         folderRepository.delete(folder);
     }
 
-=======
->>>>>>> Stashed changes
+
 }
 
