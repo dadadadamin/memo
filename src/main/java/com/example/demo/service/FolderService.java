@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.FolderRequest;
 import com.example.demo.model.Folder;
 import com.example.demo.model.User;
 import com.example.demo.repository.FolderRepository;
+import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     public Folder createFolder(String name) {
         User user = userService.getCurrentUser();
@@ -42,6 +45,18 @@ public class FolderService {
         return folderRepository.findByUserId(userService.getCurrentUser().getId());
     }
 
+    public void uploadBulk(List<FolderRequest> folders, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 ID 오류"));
+
+        for (FolderRequest req : folders) {
+            Folder folder = new Folder();
+            folder.setName(req.getName());
+            folder.setColor(req.getColor());
+            folder.setUser(user);
+            folderRepository.save(folder);
+        }
+    }
 
     public void deleteFolder(Long folderId) {
         User user = userService.getCurrentUser();

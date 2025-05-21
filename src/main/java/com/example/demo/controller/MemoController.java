@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/memos")
@@ -49,4 +50,12 @@ public class MemoController {
         memoService.deleteMemo(id);
         return ResponseEntity.ok().build();
     }
+    @PostMapping("/bulk")
+    public ResponseEntity<?> uploadBulk(@RequestBody List<MemoRequest> memos, @RequestParam String email) {
+        for (MemoRequest memo : memos) {
+            memoService.createMemo(memo, email);
+        }
+        return ResponseEntity.ok(Map.of("message", "메모 동기화 완료"));
+    }
+
 }
