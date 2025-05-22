@@ -90,6 +90,12 @@ public class FolderService {
         return folderRepository.save(folder);
     }
 
-
+    @Transactional
+    public Folder updateFolderName(Long folderId, String newName) {
+        Folder folder = getFolderByIdAndUserCheck(folderId);
+        folder.setName(newName);
+        return folderRepository.save(folder);
+    }
+    
 }
 

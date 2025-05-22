@@ -76,6 +76,19 @@ public class FolderController {
         return ResponseEntity.ok(updated);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateFolderName(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+
+        String newName = body.get("name");
+        if (newName == null || newName.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("새 폴더 이름이 누락되었습니다.");
+        }
+
+        Folder updated = folderService.updateFolderName(id, newName.trim());
+        return ResponseEntity.ok(updated);
+    }
 
 }
 
