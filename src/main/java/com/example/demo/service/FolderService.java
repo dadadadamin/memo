@@ -63,6 +63,30 @@ public class FolderService {
         folderRepository.delete(folder);
     }
 
+    @Transactional
+    public Folder updateFolderColor(Long folderId, String newColor) {
+        User user = userService.getCurrentUser();
+
+        Folder folder = folderRepository.findById(folderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 폴더가 존재하지 않습니다."));
+
+        // 현재 로그인한 유저의 폴더인지 확인
+        if (!folder.getUser().getId().equals(user.getId())) {
+            throw new SecurityException("해당 폴더를 수정할 권한이 없습니다.");
+        }
+
+        folder.setColor(newColor); // 색상 변경
+        return folderRepository.save(folder);
+    }
+
+    public Folder updateFolderImage(Long folderId, String imagePath) {
+        Folder folder = folderRepository.findById(folderId)
+                .orElseThrow(() -> new IllegalArgumentException("폴더를 찾을 수 없습니다."));
+
+        folder.setImageUrl(imagePath);
+        return folderRepository.save(folder);
+    }
+
 
 }
 

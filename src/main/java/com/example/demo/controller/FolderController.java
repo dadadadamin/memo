@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/folders")
@@ -38,11 +40,41 @@ public class FolderController {
     public ResponseEntity<?> listFolders() {
         return ResponseEntity.ok(folderService.getAllFolders());
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteFolder(@PathVariable Long id) {
         folderService.deleteFolder(id);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{id}/color")
+    public ResponseEntity<?> updateFolderColor(
+            @PathVariable Long id,
+            @RequestBody(required = true) Map<String, String> body) {
+
+        String newColor = body.get("color");
+        if (newColor == null || newColor.isEmpty()) {
+            return ResponseEntity.badRequest().body("색상 값이 누락되었습니다.");
+        }
+
+        Folder updated = folderService.updateFolderColor(id, newColor);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PutMapping("/{id}/image")
+    public ResponseEntity<?> updateFolderImage(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+
+        String newPath = body.get("imagePath");
+        if (newPath == null || newPath.isEmpty()) {
+            return ResponseEntity.badRequest().body("이미지 경로가 누락되었습니다.");
+        }
+
+        Folder updated = folderService.updateFolderImage(id, newPath);
+        return ResponseEntity.ok(updated);
+    }
+
 
 }
 
