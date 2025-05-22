@@ -24,11 +24,7 @@ public class FolderController {
     private final MemoService memoService;
 
 
-    @PostMapping("/bulk")
-    public ResponseEntity<?> uploadBulk(@RequestBody List<FolderRequest> folders, @RequestParam Long userId) {
-        folderService.uploadBulk(folders, userId);
-        return ResponseEntity.ok(Map.of("message", "동기화 완료"));
-    }
+
     @PostMapping
     public ResponseEntity<?> createFolder(@RequestBody FolderRequest folderRequest) {
         String name = folderRequest.getName();

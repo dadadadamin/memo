@@ -51,13 +51,6 @@ public class MemoController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/bulk")
-    public ResponseEntity<?> uploadBulk(@RequestBody List<MemoRequest> memos, @RequestParam String email) {
-        for (MemoRequest memo : memos) {
-            memoService.createMemo(memo, email);
-        }
-        return ResponseEntity.ok(Map.of("message", "메모 동기화 완료"));
-    }
     @GetMapping("/starred")
     public ResponseEntity<List<MemoResponse>> getStarredMemos(@RequestParam Long userId) {
         List<MemoResponse> memos = memoService.getStarredMemos(userId);
