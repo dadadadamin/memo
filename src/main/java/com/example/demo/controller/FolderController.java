@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
+
 import java.util.List;
+
 import java.util.Map;
 
 @RestController
@@ -46,10 +48,54 @@ public class FolderController {
     public ResponseEntity<?> listFolders() {
         return ResponseEntity.ok(folderService.getAllFolders());
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteFolder(@PathVariable Long id) {
         folderService.deleteFolder(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/color")
+    public ResponseEntity<?> updateFolderColor(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> body) {
+
+        String newColor = (String) body.get("color");
+        if (newColor == null || newColor.isEmpty()) {
+            return ResponseEntity.badRequest().body("색상 값이 누락되었습니다.");
+        }
+
+        // imageUrl 키가 있어도 무시하거나, 명시적으로 null일 경우 초기화 목적이라고 판단
+        Folder updated = folderService.updateFolderColor(id, newColor);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/{id}/image")
+    public ResponseEntity<?> updateFolderImage(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+
+        String newPath = body.get("imagePath");
+        if (newPath == null || newPath.isEmpty()) {
+            return ResponseEntity.badRequest().body("이미지 경로가 누락되었습니다.");
+        }
+
+        Folder updated = folderService.updateFolderImage(id, newPath);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateFolderName(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+
+        String newName = body.get("name");
+        if (newName == null || newName.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("새 폴더 이름이 누락되었습니다.");
+        }
+
+        Folder updated = folderService.updateFolderName(id, newName.trim());
+        return ResponseEntity.ok(updated);
     }
 
 }

@@ -50,12 +50,25 @@ public class MemoController {
         memoService.deleteMemo(id);
         return ResponseEntity.ok().build();
     }
+
     @PostMapping("/bulk")
     public ResponseEntity<?> uploadBulk(@RequestBody List<MemoRequest> memos, @RequestParam String email) {
         for (MemoRequest memo : memos) {
             memoService.createMemo(memo, email);
         }
         return ResponseEntity.ok(Map.of("message", "메모 동기화 완료"));
+    }
+
+
+
+    @PatchMapping("/{id}/move")
+    public ResponseEntity<?> moveMemo(
+            @PathVariable Long id,
+            @RequestBody Map<String, Long> body
+    ) {
+        Long targetFolderId = body.get("targetFolderId");
+        MemoResponse updated = memoService.moveMemo(id, targetFolderId);
+        return ResponseEntity.ok(updated);
     }
 
 }

@@ -5,8 +5,10 @@ import com.example.demo.model.Folder;
 import com.example.demo.model.User;
 import com.example.demo.repository.FolderRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,7 +18,11 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final UserService userService;
+
     private final UserRepository userRepository;
+
+    private final MemoService memoService;
+
 
     public Folder createFolder(String name) {
         User user = userService.getCurrentUser();
@@ -45,6 +51,7 @@ public class FolderService {
         return folderRepository.findByUserId(userService.getCurrentUser().getId());
     }
 
+
     public void uploadBulk(List<FolderRequest> folders, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자 ID 오류"));
@@ -58,6 +65,9 @@ public class FolderService {
         }
     }
 
+
+    @Transactional
+
     public void deleteFolder(Long folderId) {
         User user = userService.getCurrentUser();
 
@@ -69,9 +79,45 @@ public class FolderService {
             throw new SecurityException("해당 폴더를 삭제할 권한이 없습니다.");
         }
 
+        // 📌 메모 먼저 삭제
+        memoService.deleteMemosByFolderId(folderId);
+
         folderRepository.delete(folder);
     }
 
+    private Folder getFolderByIdAndUserCheck(Long folderId) {
+        User user = userService.getCurrentUser();
+        Folder folder = folderRepository.findById(folderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 폴더가 존재하지 않습니다."));
 
+        if (!folder.getUser().getId().equals(user.getId())) {
+            throw new SecurityException("해당 폴더를 수정할 권한이 없습니다.");
+        }
+
+        return folder;
+    }
+
+    @Transactional
+    public Folder updateFolderColor(Long folderId, String newColor) {
+        Folder folder = getFolderByIdAndUserCheck(folderId);
+        folder.setColor(newColor);
+        folder.setImageUrl(null); // 이미지 제거 처리 (색상으로 대체 시)
+        return folderRepository.save(folder);
+    }
+
+    @Transactional
+    public Folder updateFolderImage(Long folderId, String imagePath) {
+        Folder folder = getFolderByIdAndUserCheck(folderId);
+        folder.setImageUrl(imagePath);
+        return folderRepository.save(folder);
+    }
+
+    @Transactional
+    public Folder updateFolderName(Long folderId, String newName) {
+        Folder folder = getFolderByIdAndUserCheck(folderId);
+        folder.setName(newName);
+        return folderRepository.save(folder);
+    }
+    
 }
 

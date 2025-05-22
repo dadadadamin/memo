@@ -51,7 +51,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/folders/**", "/api/memos/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/user/{id}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/folders/**", "/api/memos/quick").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/user").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/user", "/user/me").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

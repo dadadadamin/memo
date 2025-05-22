@@ -10,6 +10,7 @@ import com.example.demo.repository.FolderRepository;
 import com.example.demo.repository.MemoRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -100,6 +101,11 @@ public class MemoService {
         memoRepository.delete(memo);
     }
 
+    public void deleteMemosByFolderId(Long folderId) {
+        List<Memo> memos = memoRepository.findAllByFolderId(folderId);
+        memoRepository.deleteAll(memos);
+    }
+
     private MemoResponse convertToResponse(Memo memo) {
         MemoResponse res = new MemoResponse();
         res.setId(memo.getId());
@@ -110,5 +116,18 @@ public class MemoService {
         res.setCreatedAt(memo.getCreatedAt());
         res.setUpdatedAt(memo.getUpdatedAt());
         return res;
+    }
+
+    @Transactional
+    public MemoResponse moveMemo(Long memoId, Long targetFolderId) {
+        Memo memo = memoRepository.findById(memoId)
+                .orElseThrow(() -> new RuntimeException("Memo not found"));
+
+        Folder target = folderRepository.findById(targetFolderId)
+                .orElseThrow(() -> new RuntimeException("Target folder not found"));
+
+        memo.setFolder(target);
+        Memo saved = memoRepository.save(memo);
+        return convertToResponse(saved);
     }
 }
