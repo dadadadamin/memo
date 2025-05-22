@@ -3,8 +3,10 @@ package com.example.demo.service;
 import com.example.demo.model.Folder;
 import com.example.demo.model.User;
 import com.example.demo.repository.FolderRepository;
+import com.example.demo.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final UserService userService;
+    private final MemoService memoService;
 
     public Folder createFolder(String name) {
         User user = userService.getCurrentUser();
@@ -42,7 +45,7 @@ public class FolderService {
         return folderRepository.findByUserId(userService.getCurrentUser().getId());
     }
 
-
+    @Transactional
     public void deleteFolder(Long folderId) {
         User user = userService.getCurrentUser();
 
@@ -53,6 +56,9 @@ public class FolderService {
         if (!folder.getUser().getId().equals(user.getId())) {
             throw new SecurityException("해당 폴더를 삭제할 권한이 없습니다.");
         }
+
+        // 📌 메모 먼저 삭제
+        memoService.deleteMemosByFolderId(folderId);
 
         folderRepository.delete(folder);
     }

@@ -100,6 +100,11 @@ public class MemoService {
         memoRepository.delete(memo);
     }
 
+    public void deleteMemosByFolderId(Long folderId) {
+        List<Memo> memos = memoRepository.findAllByFolderId(folderId);
+        memoRepository.deleteAll(memos);
+    }
+
     private MemoResponse convertToResponse(Memo memo) {
         MemoResponse res = new MemoResponse();
         res.setId(memo.getId());
