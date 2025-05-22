@@ -115,6 +115,8 @@ public class MemoService {
         res.setStoragePath(memo.getStoragePath());
         res.setCreatedAt(memo.getCreatedAt());
         res.setUpdatedAt(memo.getUpdatedAt());
+        res.setStarred(memo.isStarred()); // ✅ 즐겨찾기 반영
+
         return res;
     }
 
@@ -140,6 +142,26 @@ public class MemoService {
         return memos.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
-    
+    @Transactional
+    public MemoResponse toggleStarred(Long memoId, String email) {
+        // 사용자 확인
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자 없음"));
+
+        // 메모 조회
+        Memo memo = memoRepository.findById(memoId)
+                .orElseThrow(() -> new RuntimeException("메모 없음"));
+
+        // 자신의 메모인지 확인
+        if (!memo.getUser().getId().equals(user.getId())) {
+            throw new SecurityException("권한 없음");
+        }
+
+        // 즐겨찾기 상태 반전
+        memo.setStarred(!memo.isStarred());
+
+        Memo updated = memoRepository.save(memo);
+        return convertToResponse(updated); // 기존 Memo -> MemoResponse 변환 메서드
+    }
 
 }

@@ -68,4 +68,11 @@ public class MemoController {
         return ResponseEntity.ok(memos);
     }
 
+    @PatchMapping("/{id}/star")
+    public ResponseEntity<MemoResponse> toggleMemoStarred(@PathVariable Long id, Authentication authentication) {
+        String email = authentication.getName();
+        MemoResponse response = memoService.toggleStarred(id, email);
+        return ResponseEntity.ok(response);
+    }
+
 }
