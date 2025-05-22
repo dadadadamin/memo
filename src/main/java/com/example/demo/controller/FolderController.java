@@ -47,21 +47,22 @@ public class FolderController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}/color")
+    @PatchMapping("/{id}/color")
     public ResponseEntity<?> updateFolderColor(
             @PathVariable Long id,
-            @RequestBody(required = true) Map<String, String> body) {
+            @RequestBody Map<String, Object> body) {
 
-        String newColor = body.get("color");
+        String newColor = (String) body.get("color");
         if (newColor == null || newColor.isEmpty()) {
             return ResponseEntity.badRequest().body("색상 값이 누락되었습니다.");
         }
 
+        // imageUrl 키가 있어도 무시하거나, 명시적으로 null일 경우 초기화 목적이라고 판단
         Folder updated = folderService.updateFolderColor(id, newColor);
         return ResponseEntity.ok(updated);
     }
 
-    @PutMapping("/{id}/image")
+    @PatchMapping("/{id}/image")
     public ResponseEntity<?> updateFolderImage(
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {

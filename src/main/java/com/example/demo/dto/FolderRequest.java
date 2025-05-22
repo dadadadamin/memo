@@ -1,15 +1,14 @@
 package com.example.demo.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class FolderRequest {
+    @Setter
+    @Getter
     private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String color;
+    private String imageUrl; // ✅ 추가
 
 }
 
