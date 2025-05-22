@@ -60,4 +60,12 @@ public class MemoController {
         MemoResponse updated = memoService.moveMemo(id, targetFolderId);
         return ResponseEntity.ok(updated);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<MemoResponse>> getAllMemos(Authentication authentication) {
+        String email = authentication.getName();
+        List<MemoResponse> memos = memoService.getAllMemosForUser(email);
+        return ResponseEntity.ok(memos);
+    }
+
 }
