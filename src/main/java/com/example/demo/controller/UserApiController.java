@@ -124,4 +124,22 @@ public class UserApiController {
             return ResponseEntity.status(404).body("해당 ID의 사용자를 찾을 수 없습니다.");
         }
     }
+
+    @GetMapping("/user/me")
+    public ResponseEntity<?> getCurrentUserInfo() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(404).body("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "id", user.getId(),
+                "email", user.getEmail(),
+                "gender", user.getGender(),
+                "birthDate", user.getBirthDate(),
+                "job", user.getJob()
+        ));
+    }
+
 } 
