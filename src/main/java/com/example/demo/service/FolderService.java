@@ -96,6 +96,15 @@ public class FolderService {
         folder.setName(newName);
         return folderRepository.save(folder);
     }
-    
+
+    @Transactional
+    public Folder toggleStarred(Long folderId) {
+        Folder folder = getFolderByIdAndUserCheck(folderId); // 권한 확인 포함
+
+        folder.setStarred(!folder.isStarred()); // 현재 상태 반전
+        return folderRepository.save(folder);
+    }
+
+
 }
 

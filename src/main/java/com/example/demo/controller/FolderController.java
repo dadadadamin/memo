@@ -90,5 +90,12 @@ public class FolderController {
         return ResponseEntity.ok(updated);
     }
 
+    @PatchMapping("/{id}/star")
+    public ResponseEntity<Folder> toggleFolderStar(@PathVariable Long id) {
+        Folder updatedFolder = folderService.toggleStarred(id);
+        return ResponseEntity.ok(updatedFolder);
+    }
+
+
 }
 

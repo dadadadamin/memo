@@ -25,6 +25,9 @@ public class Folder {
     @Column(name = "is_editable")
     private boolean isEditable = true;
 
+    @Column(name = "is_starred", nullable = false)
+    private boolean starred;
+
     private Integer sortOrder = 0;
 
     private String color; // 예: "#FFAABB"

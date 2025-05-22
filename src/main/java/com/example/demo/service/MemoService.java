@@ -130,7 +130,7 @@ public class MemoService {
         Memo saved = memoRepository.save(memo);
         return convertToResponse(saved);
     }
-    
+
     @Transactional
     public List<MemoResponse> getAllMemosForUser(String email) {
         User user = userRepository.findByEmail(email)
@@ -139,4 +139,7 @@ public class MemoService {
         List<Memo> memos = memoRepository.findAllByUserId(user.getId());
         return memos.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
+
+    
+
 }
