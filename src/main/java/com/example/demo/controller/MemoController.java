@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/memos")
@@ -48,5 +49,15 @@ public class MemoController {
     public ResponseEntity<?> deleteMemo(@PathVariable Long id) {
         memoService.deleteMemo(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/move")
+    public ResponseEntity<?> moveMemo(
+            @PathVariable Long id,
+            @RequestBody Map<String, Long> body
+    ) {
+        Long targetFolderId = body.get("targetFolderId");
+        MemoResponse updated = memoService.moveMemo(id, targetFolderId);
+        return ResponseEntity.ok(updated);
     }
 }
