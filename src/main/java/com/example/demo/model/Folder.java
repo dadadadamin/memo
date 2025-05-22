@@ -29,6 +29,17 @@ public class Folder {
 
     private String color; // 예: "#FFAABB"
     private String imageUrl; // 예: "https://.../folder1.png"
+    @Column(nullable = false)
+    private boolean isStarred = false; //즐겨찾기
+    // Getter
+    public boolean isStarred() {
+        return isStarred;
+    }
+
+    // Setter
+    public void setIsStarred(boolean isStarred) {
+        this.isStarred = isStarred;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

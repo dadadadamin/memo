@@ -22,7 +22,18 @@ public class Memo {
     private String imageUrl; // 이미지 저장 경로
 
     private String storagePath; // 메모 저장 위치 (폴더처럼 관리)
+    @Column(nullable = false)
+    private boolean isStarred = false; //즐겨찾기
 
+    // Getter
+    public boolean isStarred() {
+        return isStarred;
+    }
+
+    // Setter
+    public void setIsStarred(boolean isStarred) {
+        this.isStarred = isStarred;
+    }
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

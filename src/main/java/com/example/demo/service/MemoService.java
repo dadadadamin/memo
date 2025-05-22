@@ -43,10 +43,11 @@ public class MemoService {
         memo.setStoragePath(request.getStoragePath());
         memo.setUser(user);
         memo.setFolder(folder);
-
+        memo.setIsStarred(request.isStarred());
         Memo saved = memoRepository.save(memo);
         return convertToResponse(saved);
     }
+
 
     public MemoResponse createQuickMemo(MemoRequest request, String email) {
         User user = userRepository.findByEmail(email)
@@ -130,4 +131,10 @@ public class MemoService {
         Memo saved = memoRepository.save(memo);
         return convertToResponse(saved);
     }
+    // MemoService 내부
+    public List<MemoResponse> getStarredMemos(Long userId) {
+        List<Memo> memos = memoRepository.findByUserIdAndIsStarredTrue(userId);
+        return memos.stream().map(this::convertToResponse).collect(Collectors.toList());
+    }
+
 }

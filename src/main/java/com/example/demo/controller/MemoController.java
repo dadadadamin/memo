@@ -58,6 +58,11 @@ public class MemoController {
         }
         return ResponseEntity.ok(Map.of("message", "메모 동기화 완료"));
     }
+    @GetMapping("/starred")
+    public ResponseEntity<List<MemoResponse>> getStarredMemos(@RequestParam Long userId) {
+        List<MemoResponse> memos = memoService.getStarredMemos(userId);
+        return ResponseEntity.ok(memos);
+    }
 
 
 

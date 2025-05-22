@@ -9,5 +9,6 @@ public interface MemoRepository extends JpaRepository<Memo, Long> {
 
     List<Memo> findAllByFolderId(Long folderId);
 
-    List<Memo> findAllByUserId(Long userId);
+    List<Memo> findByUserIdAndIsStarredTrue(Long userId);
+
 }

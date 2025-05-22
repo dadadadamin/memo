@@ -14,6 +14,5 @@ public class MemoResponse {
     private String storagePath;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    // 생성자, Getter, Setter 등
+    private boolean isStarred;
 }
