@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -24,8 +25,13 @@ public class FolderController {
     @PostMapping
     public ResponseEntity<?> createFolder(@RequestBody FolderRequest folderRequest) {
         String name = folderRequest.getName();
-        Folder folder = folderService.createFolder(name); // ✅ 폴더 생성
-        return ResponseEntity.ok(folder); // ✅ 응답 반환
+        String location = folderRequest.getLocation();
+        LocalDate startDate = folderRequest.getStartDate();
+        LocalDate endDate = folderRequest.getEndDate();
+        String imageUrl = folderRequest.getImageUrl(); // ✅ imageUrl 추가
+
+        Folder folder = folderService.createFolder(name, location, startDate, endDate, imageUrl); // ✅ 인자 전달
+        return ResponseEntity.ok(folder);
     }
 
     @PostMapping("/quick")
