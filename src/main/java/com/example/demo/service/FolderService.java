@@ -18,8 +18,11 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final UserService userService;
     private final MemoService memoService;
+    private final OpenAIService openAIService; // ✅ 추가
 
-    public Folder createFolder(String name, String location, LocalDate startDate, LocalDate endDate, String imageUrl) {
+
+
+    public Folder createFolder(String name, String location, LocalDate startDate, LocalDate endDate, String imageUrl, Folder.TravelPurpose purpose) {
         try {
             User user = userService.getCurrentUser();
 
@@ -29,8 +32,12 @@ public class FolderService {
             folder.setStartDate(startDate);
             folder.setEndDate(endDate);
             folder.setImageUrl(imageUrl); // ✅ 이미지 URL 추가
+            folder.setPurpose(purpose);   // ✅ 여행 목적 추가
             folder.setStarred(false); // ✅ 누락 방지용
             folder.setUser(user);
+            // ✅ AI 가이드 생성 및 세팅
+            String guide = openAIService.generateAiGuide(name, location, startDate, endDate, purpose);
+            folder.setAiGuide(guide);
 
             return folderRepository.save(folder);
         } catch (Exception e) {
@@ -39,6 +46,8 @@ public class FolderService {
             throw e; // 예외 다시 던져서 403 유지 (혹은 500으로 처리해도 됨)
         }
     }
+
+
 
     public Folder getOrCreateDefaultFolder() {
         User user = userService.getCurrentUser();

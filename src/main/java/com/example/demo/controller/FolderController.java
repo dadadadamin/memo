@@ -22,17 +22,18 @@ public class FolderController {
     private final MemoService memoService;
 
 
-    @PostMapping
-    public ResponseEntity<?> createFolder(@RequestBody FolderRequest folderRequest) {
-        String name = folderRequest.getName();
-        String location = folderRequest.getLocation();
-        LocalDate startDate = folderRequest.getStartDate();
-        LocalDate endDate = folderRequest.getEndDate();
-        String imageUrl = folderRequest.getImageUrl(); // ✅ imageUrl 추가
+        @PostMapping
+        public ResponseEntity<?> createFolder(@RequestBody FolderRequest folderRequest) {
+            String name = folderRequest.getName();
+            String location = folderRequest.getLocation();
+            LocalDate startDate = folderRequest.getStartDate();
+            LocalDate endDate = folderRequest.getEndDate();
+            String imageUrl = folderRequest.getImageUrl(); // ✅ imageUrl 추가
+            Folder.TravelPurpose purpose = folderRequest.getPurpose();
 
-        Folder folder = folderService.createFolder(name, location, startDate, endDate, imageUrl); // ✅ 인자 전달
-        return ResponseEntity.ok(folder);
-    }
+            Folder folder = folderService.createFolder(name, location, startDate, endDate, imageUrl, purpose); // ✅ 인자 전달
+            return ResponseEntity.ok(folder);
+        }
 
     @PostMapping("/quick")
     public ResponseEntity<?> saveQuickMemo(@RequestBody MemoRequest request,
