@@ -20,19 +20,17 @@ public class OpenAIService {
     public String summarize(OpenAIRequest requestDto) {
         RestTemplate restTemplate = new RestTemplate();
 
-        // ✅ 메시지 구성
+        // ✅ 프론트와 동일하게 메시지 하나로 합침
         List<Map<String, String>> messages = List.of(
-                Map.of("role", "system", "content", "당신은 여행 메모를 간결하게 요약해주는 어시스턴트입니다."),
+                Map.of("role", "system", "content", "당신은 사용자의 여행 메모를 읽고, 핵심만 한국어로 간결하게 요약해주는 AI 어시스턴트입니다. 항상 짧고 알기 쉽게 문장식 말고 단어식으로 요약해 주세요."),
                 Map.of("role", "user", "content", requestDto.getTitle() + "\n" + requestDto.getContent())
         );
 
-        // ✅ 요청 바디 구성
         Map<String, Object> body = new HashMap<>();
         body.put("model", "gpt-3.5-turbo");
         body.put("messages", messages);
         body.put("temperature", 0.7);
 
-        // ✅ 헤더 구성
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(apiKey);
