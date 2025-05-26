@@ -15,4 +15,6 @@ public class MemoResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean isStarred;
+    private boolean starred;
+
 }

@@ -53,6 +53,10 @@ public class Memo {
     @Column
     private Integer estimatedCost;
 
+    @Column(name = "is_starred", nullable = false)
+    private boolean starred = false; //즐겨찾기
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.*;
+
 import com.example.demo.dto.memo.MemoRequest;
 import com.example.demo.dto.memo.MemoResponse;
 import com.example.demo.service.MemoService;
@@ -69,4 +69,17 @@ public class MemoController {
         return ResponseEntity.ok(updated);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<MemoResponse>> getAllMemos(Authentication authentication) {
+        String email = authentication.getName();
+        List<MemoResponse> memos = memoService.getAllMemosForUser(email);
+        return ResponseEntity.ok(memos);
+    }
+
+    @PatchMapping("/{id}/star")
+    public ResponseEntity<MemoResponse> toggleMemoStarred(@PathVariable Long id, Authentication authentication) {
+        String email = authentication.getName();
+        MemoResponse response = memoService.toggleStarred(id, email);
+        return ResponseEntity.ok(response);
+    }
 }

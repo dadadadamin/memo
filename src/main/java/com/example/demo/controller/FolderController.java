@@ -9,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
-
-
-import java.util.List;
+import java.time.LocalDate;
 
 import java.util.Map;
 
@@ -28,8 +26,13 @@ public class FolderController {
     @PostMapping
     public ResponseEntity<?> createFolder(@RequestBody FolderRequest folderRequest) {
         String name = folderRequest.getName();
-        Folder folder = folderService.createFolder(name); // ✅ 폴더 생성
-        return ResponseEntity.ok(folder); // ✅ 응답 반환
+        String location = folderRequest.getLocation();
+        LocalDate startDate = folderRequest.getStartDate();
+        LocalDate endDate = folderRequest.getEndDate();
+        String imageUrl = folderRequest.getImageUrl(); // ✅ imageUrl 추가
+
+        Folder folder = folderService.createFolder(name, location, startDate, endDate, imageUrl); // ✅ 인자 전달
+        return ResponseEntity.ok(folder);
     }
 
     @PostMapping("/quick")
@@ -93,6 +96,13 @@ public class FolderController {
         Folder updated = folderService.updateFolderName(id, newName.trim());
         return ResponseEntity.ok(updated);
     }
+
+    @PatchMapping("/{id}/star")
+    public ResponseEntity<Folder> toggleFolderStar(@PathVariable Long id) {
+        Folder updatedFolder = folderService.toggleStarred(id);
+        return ResponseEntity.ok(updatedFolder);
+    }
+
 
 }
 

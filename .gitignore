@@ -45,7 +45,7 @@ src/main/java/.DS_Store
 src/main/java/com/example/demo/.DS_Store
 src/main/java/com/example/.DS_Store
 src/main/java/com/.DS_Store
-src/main/java/.DS_Store
-src/main/resources/translation-key.json
 src/main/resources/translation-key.json
 src/main/resources/application.properties
+.env
+
