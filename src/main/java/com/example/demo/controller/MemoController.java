@@ -51,14 +51,6 @@ public class MemoController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/starred")
-    public ResponseEntity<List<MemoResponse>> getStarredMemos(@RequestParam Long userId) {
-        List<MemoResponse> memos = memoService.getStarredMemos(userId);
-        return ResponseEntity.ok(memos);
-    }
-
-
-
     @PatchMapping("/{id}/move")
     public ResponseEntity<?> moveMemo(
             @PathVariable Long id,

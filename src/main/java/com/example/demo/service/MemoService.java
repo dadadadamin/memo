@@ -135,12 +135,6 @@ public class MemoService {
     }
 
     // MemoService 내부
-    public List<MemoResponse> getStarredMemos(Long userId) {
-        List<Memo> memos = memoRepository.findByUserIdAndIsStarredTrue(userId);
-        return memos.stream().map(this::convertToResponse).collect(Collectors.toList());
-    }
-
-
 
     @Transactional
     public List<MemoResponse> getAllMemosForUser(String email) {

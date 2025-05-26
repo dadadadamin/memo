@@ -34,8 +34,5 @@ public class MemoRequest {
         return isStarred;
     }
 
-    public void setIsStarred(boolean isStarred) {
-        this.isStarred = isStarred;
-    }
 
 }
