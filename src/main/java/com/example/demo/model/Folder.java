@@ -43,6 +43,20 @@ public class Folder {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
+    public enum TravelPurpose {
+        TOURISM,     // 관광
+        BUSINESS,    // 출장, 컨퍼런스 등
+        RELAXATION,  // 휴식 중심 여행
+        OTHER        // 기타 (예: 가족 방문 등)
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "purpose")
+    private TravelPurpose purpose;
+
+    @Column(name = "ai_guide", columnDefinition = "TEXT")
+    private String aiGuide;
+
     private Integer sortOrder = 0;
 
     private String color; // 예: "#FFAABB"

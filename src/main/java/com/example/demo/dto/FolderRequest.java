@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import com.example.demo.model.Folder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ public class FolderRequest {
     private LocalDate endDate;     // ✅ 추가
     private String color;
     private String imageUrl; // ✅ 추가
+    private Folder.TravelPurpose purpose; // ✅ 추가
 
     public String getName() {
         return name;

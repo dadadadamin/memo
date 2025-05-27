@@ -23,16 +23,13 @@ public class FolderService {
     private final UserRepository userRepository;
 
     private final MemoService memoService;
+    private final OpenAIService openAIService; // ✅ 추가
 
 
 
-//    public Folder createFolder(String name) {
-//        User user = userService.getCurrentUser();
-//        Folder folder = new Folder();
-//        folder.setName(name);
-//        folder.setUser(user);
-//        return folderRepository.save(folder);
-    public Folder createFolder(String name, String location, LocalDate startDate, LocalDate endDate, String imageUrl) {
+
+    public Folder createFolder(String name, String location, LocalDate startDate, LocalDate endDate, String imageUrl, Folder.TravelPurpose purpose) {
+
         try {
             User user = userService.getCurrentUser();
 
@@ -42,8 +39,12 @@ public class FolderService {
             folder.setStartDate(startDate);
             folder.setEndDate(endDate);
             folder.setImageUrl(imageUrl); // ✅ 이미지 URL 추가
+            folder.setPurpose(purpose);   // ✅ 여행 목적 추가
             folder.setStarred(false); // ✅ 누락 방지용
             folder.setUser(user);
+            // ✅ AI 가이드 생성 및 세팅
+            String guide = openAIService.generateAiGuide(name, location, startDate, endDate, purpose);
+            folder.setAiGuide(guide);
 
             return folderRepository.save(folder);
         } catch (Exception e) {
@@ -53,19 +54,21 @@ public class FolderService {
         }
     }
 
-//    public Folder getOrCreateDefaultFolder() {
-//        User user = userService.getCurrentUser();
-//
-//        return folderRepository.findByUserIdAndName(user.getId(), "default")
-//                .orElseGet(() -> {
-//                    Folder folder = new Folder();
-//                    folder.setName("default");
-//                    folder.setUser(user);
-//                    folder.setType("default"); // 선택 사항
-//                    folder.setEditable(false); // 삭제 방지
-//                    return folderRepository.save(folder);
-//                });
-//    }
+
+
+    public Folder getOrCreateDefaultFolder() {
+        User user = userService.getCurrentUser();
+
+        return folderRepository.findByUserIdAndName(user.getId(), "default")
+                .orElseGet(() -> {
+                    Folder folder = new Folder();
+                    folder.setName("default");
+                    folder.setUser(user);
+                    folder.setType("default"); // 선택 사항
+                    folder.setEditable(false); // 삭제 방지
+                    return folderRepository.save(folder);
+                });
+    }
 
 
     public List<Folder> getAllFolders() {
