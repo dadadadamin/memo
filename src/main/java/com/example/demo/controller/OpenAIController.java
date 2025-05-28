@@ -22,4 +22,12 @@ public class OpenAIController {
         String result = openAIService.summarize(request);
         return ResponseEntity.ok(result);
     }
+
+    // ✅ 캡션 추천 엔드포인트
+    @PostMapping("/caption")
+    public ResponseEntity<String> generateCaption(@RequestBody OpenAIRequest request) {
+        String result = openAIService.generateCaption(request.getTitle(), request.getContent());
+        return ResponseEntity.ok(result);
+    }
+
 }

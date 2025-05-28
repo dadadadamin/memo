@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Getter
 @Setter
 @NoArgsConstructor
+// Folder.java
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "memos"})
 public class Folder {
 
     @Id

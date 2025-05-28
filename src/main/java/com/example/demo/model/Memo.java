@@ -2,6 +2,9 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,6 +56,10 @@ public class Memo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder_id")
     private Folder folder;
+
+    // ✅ 장소 마커들과의 연관관계 추가
+    @OneToMany(mappedBy = "memo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MapPlace> mapPlaces = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
