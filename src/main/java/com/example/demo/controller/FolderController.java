@@ -21,7 +21,7 @@ public class FolderController {
     private final FolderService folderService;
     private final MemoService memoService;
 
-    
+
     @PostMapping
     public ResponseEntity<?> createFolder(@RequestBody FolderRequest folderRequest) {
         String name = folderRequest.getName();

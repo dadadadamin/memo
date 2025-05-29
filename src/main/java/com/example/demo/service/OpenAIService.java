@@ -72,6 +72,7 @@ public class OpenAIService {
         }
     }
 
+
     @Autowired
     private TourStatService tourStatService;
 
@@ -93,8 +94,6 @@ public class OpenAIService {
             return Map.of("error", "GPT JSON 파싱 실패", "message", e.getMessage());
         }
     }
-
-
 
     private Map<String, Object> handleSummaryMode(GptResponse gpt) {
         List<Map<String, Object>> enriched = new ArrayList<>();
@@ -126,6 +125,7 @@ public class OpenAIService {
                 "congestion", tourStatService.getVisitorStats(areaCode, getToday())
         );
     }
+
     public String mapPlaceToAreaCode(String place) {
         return switch (place) {
             case "서울" -> "1";
@@ -151,6 +151,7 @@ public class OpenAIService {
     private String getToday() {
         return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
+
 
 
 
@@ -195,9 +196,6 @@ public class OpenAIService {
 
         return response.getBody().getChoices().get(0).getMessage().getContent();
     }
-
-
-
 
     public List<String> extractPlacesFromText(String memoText) {
         RestTemplate restTemplate = new RestTemplate();
