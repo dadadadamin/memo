@@ -70,38 +70,25 @@ public class UserApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request, BindingResult bindingResult) {
-        // 🔍 1. 유효성 검사 실패 시 에러 메시지 반환
-        if (bindingResult.hasErrors()) {
-            String errorMessages = bindingResult.getFieldErrors().stream()
-                    .map(FieldError::getDefaultMessage)
-                    .reduce((msg1, msg2) -> msg1 + ", " + msg2)
-                    .orElse("입력값이 유효하지 않습니다.");
-            return ResponseEntity.badRequest().body(Map.of("message", errorMessages));
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        if (request == null || request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이메일을 입력하세요.");
         }
 
         try {
-            // 🔐 2. 인증 시도
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // 🪪 3. 토큰 생성 및 사용자 조회
             String token = userService.login(request);
+            // 사용자 객체에서 역할(role) 추출
             User user = userService.findByEmail(request.getEmail());
+            String role = user.getRole(); // ✅ 여기 중요
 
-            return ResponseEntity.ok(Map.of(
-                    "message", "로그인 성공",
-                    "token", token,
-                    "email", user.getEmail(),
-                    "role", user.getRole()
-            ));
+            return ResponseEntity.ok(Map.of("message", "로그인 성공", "token", token));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                    "message", "이메일 또는 비밀번호가 일치하지 않습니다."
-            ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
         }
     }
 

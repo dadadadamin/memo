@@ -14,9 +14,15 @@ public class MapsController {
 
     private final MapsService mapsService;
 
-    @PostMapping
+    @PostMapping("/memo")
     public ResponseEntity<MapsResponse> analyzeMemo(@RequestBody MapsRequest request) {
-        MapsResponse response = mapsService.analyzeMemo(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(mapsService.analyzeText(request.getMemoText()));
     }
+
+    @PostMapping("/folder")
+    public ResponseEntity<MapsResponse> analyzeFolder(@RequestBody MapsRequest request) {
+        return ResponseEntity.ok(mapsService.analyzeText(request.getFolderLocation()));
+    }
+
+
 }

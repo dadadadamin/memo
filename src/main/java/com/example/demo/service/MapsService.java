@@ -26,37 +26,27 @@ public class MapsService {
     private final OpenAIService openAIService;
     private final TranslationService translationService;
     private final MapsRepository mapsRepository;
-    private final MemoRepository memoRepository;
 
     @Value("${google.maps.api.key}")
     private String apiKey;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public MapsResponse analyzeMemo(MapsRequest request) {
-        String memoText = request.getMemoText();
+    public MapsResponse analyzeText(String rawText) {
+        List<String> placeNames = openAIService.extractPlacesFromText(rawText);
 
-        // 1. GPT로 장소명 추출
-        List<String> placeNames = openAIService.extractPlacesFromText(memoText);
-        if (placeNames.isEmpty()) {
-            return new MapsResponse(Collections.emptyList());
-        }
-
-        // 2. 각 장소명을 좌표로 변환 (DB 저장 없이 DTO 반환)
         List<MapPlaceDto> dtoList = placeNames.stream()
                 .map(name -> {
                     try {
                         String translated = translationService.translateText(name, "en");
-                        return resolvePlaceToLatLngDto(translated); // ✅ 수정된 메서드 사용
+                        return resolvePlaceToLatLngDto(translated);
                     } catch (IOException e) {
-                        System.out.println("❌ 번역 실패: " + name + " - " + e.getMessage());
                         return null;
                     }
                 })
                 .filter(Objects::nonNull)
                 .toList();
 
-        System.out.println("🧠 GPT가 추출한 장소명 목록: " + placeNames);
         return new MapsResponse(dtoList);
     }
 

@@ -22,18 +22,18 @@ public class FolderController {
     private final MemoService memoService;
 
 
-        @PostMapping
-        public ResponseEntity<?> createFolder(@RequestBody FolderRequest folderRequest) {
-            String name = folderRequest.getName();
-            String location = folderRequest.getLocation();
-            LocalDate startDate = folderRequest.getStartDate();
-            LocalDate endDate = folderRequest.getEndDate();
-            String imageUrl = folderRequest.getImageUrl(); // ✅ imageUrl 추가
-            Folder.TravelPurpose purpose = folderRequest.getPurpose();
+    @PostMapping
+    public ResponseEntity<?> createFolder(@RequestBody FolderRequest folderRequest) {
+        String name = folderRequest.getName();
+        String location = folderRequest.getLocation();
+        LocalDate startDate = folderRequest.getStartDate();
+        LocalDate endDate = folderRequest.getEndDate();
+        String imageUrl = folderRequest.getImageUrl(); // ✅ imageUrl 추가
+        Folder.TravelPurpose purpose = folderRequest.getPurpose();
 
-            Folder folder = folderService.createFolder(name, location, startDate, endDate, imageUrl, purpose); // ✅ 인자 전달
-            return ResponseEntity.ok(folder);
-        }
+        Folder folder = folderService.createFolder(name, location, startDate, endDate, imageUrl, purpose); // ✅ 인자 전달
+        return ResponseEntity.ok(folder);
+    }
 
     @PostMapping("/quick")
     public ResponseEntity<?> saveQuickMemo(@RequestBody MemoRequest request,
@@ -103,6 +103,11 @@ public class FolderController {
         return ResponseEntity.ok(updatedFolder);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getFolderById(@PathVariable Long id) {
+        Folder folder = folderService.getFolderByIdAndUserCheck(id); // ✅ 권한 체크 포함된 메서드 사용
+        return ResponseEntity.ok(folder);
+    }
 
 }
 
