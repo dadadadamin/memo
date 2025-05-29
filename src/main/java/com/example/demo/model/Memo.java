@@ -26,6 +26,18 @@ public class Memo {
 
     private String storagePath; // 메모 저장 위치 (폴더처럼 관리)
 
+
+    @Column(name = "is_starred", nullable = false)
+    private boolean starred = false; // 즐겨찾기
+    // Getter
+    public boolean isStarred() {
+        return starred;
+    }
+
+    // Setter
+    public void setIsStarred(boolean isStarred) {
+        this.starred = isStarred;
+    }
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -44,10 +56,6 @@ public class Memo {
 
     @Column
     private Integer estimatedCost;
-
-    @Column(name = "is_starred", nullable = false)
-    private boolean starred = false; //즐겨찾기
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

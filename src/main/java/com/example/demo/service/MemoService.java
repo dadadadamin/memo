@@ -43,10 +43,11 @@ public class MemoService {
         memo.setStoragePath(request.getStoragePath());
         memo.setUser(user);
         memo.setFolder(folder);
-
+        memo.setIsStarred(request.isStarred());
         Memo saved = memoRepository.save(memo);
         return convertToResponse(saved);
     }
+
 
     public MemoResponse createQuickMemo(MemoRequest request, String email) {
         User user = userRepository.findByEmail(email)
@@ -115,7 +116,7 @@ public class MemoService {
         res.setStoragePath(memo.getStoragePath());
         res.setCreatedAt(memo.getCreatedAt());
         res.setUpdatedAt(memo.getUpdatedAt());
-        res.setStarred(memo.isStarred()); // ✅ 즐겨찾기 반영
+      //  res.setStarred(memo.isStarred()); // ✅ 즐겨찾기 반영
 
         return res;
     }
@@ -132,6 +133,8 @@ public class MemoService {
         Memo saved = memoRepository.save(memo);
         return convertToResponse(saved);
     }
+
+    // MemoService 내부
 
     @Transactional
     public List<MemoResponse> getAllMemosForUser(String email) {
@@ -163,5 +166,4 @@ public class MemoService {
         Memo updated = memoRepository.save(memo);
         return convertToResponse(updated); // 기존 Memo -> MemoResponse 변환 메서드
     }
-
 }

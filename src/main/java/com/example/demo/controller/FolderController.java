@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
-
 import java.time.LocalDate;
+
 import java.util.Map;
 
 @RestController
@@ -21,7 +21,7 @@ public class FolderController {
     private final FolderService folderService;
     private final MemoService memoService;
 
-
+    
     @PostMapping
     public ResponseEntity<?> createFolder(@RequestBody FolderRequest folderRequest) {
         String name = folderRequest.getName();
@@ -34,6 +34,7 @@ public class FolderController {
         Folder folder = folderService.createFolder(name, location, startDate, endDate, imageUrl, purpose); // ✅ 인자 전달
         return ResponseEntity.ok(folder);
     }
+
 
     @PostMapping("/quick")
     public ResponseEntity<?> saveQuickMemo(@RequestBody MemoRequest request,

@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.FolderRequest;
 import com.example.demo.model.Folder;
 import com.example.demo.model.User;
 import com.example.demo.repository.FolderRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,14 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final UserService userService;
+
+    private final UserRepository userRepository;
+
     private final MemoService memoService;
     private final OpenAIService openAIService; // ✅ 추가
 
-
     public Folder createFolder(String name, String location, LocalDate startDate, LocalDate endDate, String imageUrl, Folder.TravelPurpose purpose) {
+
         try {
             User user = userService.getCurrentUser();
 
@@ -70,7 +75,9 @@ public class FolderService {
         return folderRepository.findByUserId(userService.getCurrentUser().getId());
     }
 
+
     @Transactional
+
     public void deleteFolder(Long folderId) {
         User user = userService.getCurrentUser();
 

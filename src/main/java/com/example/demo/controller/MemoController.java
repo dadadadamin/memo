@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.*;
+
 import com.example.demo.dto.memo.MemoRequest;
 import com.example.demo.dto.memo.MemoResponse;
 import com.example.demo.service.MemoService;
@@ -74,5 +74,4 @@ public class MemoController {
         MemoResponse response = memoService.toggleStarred(id, email);
         return ResponseEntity.ok(response);
     }
-
 }

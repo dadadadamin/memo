@@ -25,6 +25,14 @@ public class MemoRequest {
     public Long getFolderId() {
         return folderId;
     }
+    public void setFolderId(Long folderId) {
+        this.folderId = folderId;
+    }
+    private boolean isStarred;
 
-    // Setter 도 필요하다면 같이 정의!
+    public boolean isStarred() {
+        return isStarred;
+    }
+
+
 }

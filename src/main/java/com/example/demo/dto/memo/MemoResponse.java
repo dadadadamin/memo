@@ -16,5 +16,4 @@ public class MemoResponse {
     private LocalDateTime updatedAt;
     private boolean starred;
 
-    // 생성자, Getter, Setter 등
 }

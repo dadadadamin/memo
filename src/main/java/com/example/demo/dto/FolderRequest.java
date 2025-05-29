@@ -17,5 +17,16 @@ public class FolderRequest {
     private String imageUrl; // ✅ 추가
     private Folder.TravelPurpose purpose; // ✅ 추가
 
+    public String getName() {
+        return name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+
+
+
 }
 

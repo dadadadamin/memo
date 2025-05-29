@@ -66,6 +66,9 @@ public class Folder {
     @Column(name = "image_url")
     private String imageUrl; // 예: "https://.../folder1.png"
 
+
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
