@@ -25,9 +25,6 @@ public class FolderService {
     private final MemoService memoService;
     private final OpenAIService openAIService; // ✅ 추가
 
-
-
-
     public Folder createFolder(String name, String location, LocalDate startDate, LocalDate endDate, String imageUrl, Folder.TravelPurpose purpose) {
 
         try {
@@ -55,7 +52,6 @@ public class FolderService {
     }
 
 
-
     public Folder getOrCreateDefaultFolder() {
         User user = userService.getCurrentUser();
 
@@ -66,8 +62,12 @@ public class FolderService {
                     folder.setUser(user);
                     folder.setType("default"); // 선택 사항
                     folder.setEditable(false); // 삭제 방지
+                    // 🛑 AI 가이드 생략 또는 안전하게 처리
+                    folder.setAiGuide("기본 폴더입니다.");
+
                     return folderRepository.save(folder);
                 });
+
     }
 
 
@@ -95,7 +95,7 @@ public class FolderService {
         folderRepository.delete(folder);
     }
 
-    private Folder getFolderByIdAndUserCheck(Long folderId) {
+    public Folder getFolderByIdAndUserCheck(Long folderId) {
         User user = userService.getCurrentUser();
         Folder folder = folderRepository.findById(folderId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 폴더가 존재하지 않습니다."));
@@ -136,6 +136,8 @@ public class FolderService {
         folder.setStarred(!folder.isStarred()); // 현재 상태 반전
         return folderRepository.save(folder);
     }
+
+    
 
 
 }

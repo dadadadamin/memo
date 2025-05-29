@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MapsRequest {
     private String memoText; // GPT가 분석할 메모 내용
+    private String folderLocation; // 💡 fallback으로 사용할 폴더의 장소
 }

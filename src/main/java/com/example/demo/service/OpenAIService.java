@@ -27,7 +27,6 @@ public class OpenAIService {
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
 
-
     public String summarize(OpenAIRequest requestDto) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -234,7 +233,8 @@ public class OpenAIService {
                 String jsonArray = response.getBody().getChoices().get(0).getMessage().getContent().trim();
                 // JSON 문자열 파싱
                 ObjectMapper mapper = new ObjectMapper();
-                return mapper.readValue(jsonArray, new TypeReference<List<String>>() {});
+                return mapper.readValue(jsonArray, new TypeReference<List<String>>() {
+                });
             }
 
         } catch (Exception e) {
@@ -284,13 +284,22 @@ public class OpenAIService {
     }
 
     public String generateAiGuide(String name, String location, LocalDate startDate, LocalDate endDate, Folder.TravelPurpose purpose) {
+        // ✅ 필수값이 누락되면 AI 가이드 생성하지 않음
+        if (name == null || location == null || startDate == null || endDate == null || purpose == null) {
+            return "※ 여행 정보가 부족하여 AI 가이드를 생성할 수 없습니다.";
+        }
         RestTemplate restTemplate = new RestTemplate();
 
         List<Map<String, String>> messages = List.of(
                 Map.of("role", "system", "content",
-                        "당신은 사용자의 여행 목적과 일정에 맞게 명확하고 실용적인 여행 준비 체크리스트를 제공하는 AI 어시스턴트입니다. " +
-                                "설명식 문장이 아닌, 항목 중심의 깔끔한 출력 형식을 사용하세요. 각 항목을 카테고리별로 나누고, 이모지를 활용해 시각적으로 구분되도록 작성하세요. " +
-                                "예: 📌 준비물, ⚠️ 유의사항, 📝 팁 등. 문장은 짧고 핵심만 전달하세요."),
+                        "당신은 사용자가 입력한 여행 목적, 장소, 일정 정보를 바탕으로 **맞춤형 여행 체크리스트**를 제공하는 AI 어시스턴트입니다. " +
+                                "항목은 사용자 정보에 기반해 **실질적으로 도움이 되는 내용**으로 구성하고, 단순한 보편적 추천은 피하세요. " +
+                                "예: '도쿄 해변 휴양'이면 선크림, 수영복, 해양 액티비티 용품을, '파리 비즈니스 출장'이면 노트북, 프레젠테이션 자료 등을 추천하세요. " +
+                                "출력은 카테고리별로 나누고, 이모지(📌, ⚠️, 📝 등)를 활용해 시각적으로 구분하세요. " +
+                                "각 항목은 설명식 문장이 아닌 **간결한 키워드 형태**로 나열하며, **중복 없이 핵심만** 담아야 합니다. " +
+                                "카테고리는 다음 예시처럼 구성하세요: 📌 준비물, ⚠️ 유의사항, 📝 현지 팁. 숙박, 교통, 맛집 등" +
+                                "사용자의 입력에 꼭 맞는, 정제된 체크리스트를 제공하세요."
+                ),
                 Map.of("role", "user", "content", String.format(
                         "여행 이름: %s\n여행 장소: %s\n여행 기간: %s ~ %s\n여행 목적: %s\n\n" +
                                 "위 정보 기반으로 사용자가 보기 편한 AI 여행 준비 가이드를 작성해주세요.",
