@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class User implements UserDetails { // UserDetails를 상속받아 인증
     @Column(name = "id", updatable = false)
     private Long id;
 
+    @Email
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
