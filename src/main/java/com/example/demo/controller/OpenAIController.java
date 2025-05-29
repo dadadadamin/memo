@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/openai")
 public class OpenAIController {
@@ -29,5 +31,12 @@ public class OpenAIController {
         String result = openAIService.generateCaption(request.getTitle(), request.getContent());
         return ResponseEntity.ok(result);
     }
+    // 📄 OpenAIController.java
+    @PostMapping("/analyze")
+    public ResponseEntity<?> analyzeMemo(@RequestBody OpenAIRequest request) {
+        Map<String, Object> result = openAIService.analyzeOrRecommendTrip(request);
+        return ResponseEntity.ok(result);
+    }
+
 
 }

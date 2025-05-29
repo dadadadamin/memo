@@ -1,17 +1,22 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.GptResponse;
 import com.example.demo.dto.OpenAIRequest;
 import com.example.demo.dto.OpenAIResponse;
 import com.example.demo.model.Folder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 public class OpenAIService {
@@ -67,6 +72,133 @@ public class OpenAIService {
             return "❌ 예외 발생: " + e.getMessage();
         }
     }
+
+    @Autowired
+    private TourStatService tourStatService;
+
+    public Map<String, Object> analyzeOrRecommendTrip(OpenAIRequest requestDto) {
+        try {
+            String gptJson = analyzePromptText(requestDto.getContent());
+            ObjectMapper mapper = new ObjectMapper();
+            GptResponse gpt = mapper.readValue(gptJson, GptResponse.class);
+
+            if ("summary".equals(gpt.getMode())) {
+                return handleSummaryMode(gpt);
+            } else {
+                return handleRecommendMode(gpt);
+            }
+
+        } catch (JsonProcessingException e) {
+            // 로그 찍고 fallback 처리
+            e.printStackTrace();
+            return Map.of("error", "GPT JSON 파싱 실패", "message", e.getMessage());
+        }
+    }
+
+
+
+    private Map<String, Object> handleSummaryMode(GptResponse gpt) {
+        List<Map<String, Object>> enriched = new ArrayList<>();
+
+        for (String place : gpt.getPlaces()) {
+            String areaCode = mapPlaceToAreaCode(place);
+            Map<String, Object> placeInfo = new HashMap<>();
+            placeInfo.put("place", place);
+            placeInfo.put("visitorStats", tourStatService.getVisitorStats(areaCode, getToday()));
+            placeInfo.put("recommendation", tourStatService.getTravelRecommendation(areaCode));
+            enriched.add(placeInfo);
+        }
+
+        return Map.of(
+                "mode", "summary",
+                "summary", gpt.getSummary(),
+                "places", enriched
+        );
+    }
+
+    private Map<String, Object> handleRecommendMode(GptResponse gpt) {
+        String areaCode = recommendAreaCodeByPurpose(gpt.getPurpose());
+
+        return Map.of(
+                "mode", "recommend",
+                "purpose", gpt.getPurpose(),
+                "recommendedArea", areaCode,
+                "forecast", tourStatService.getTravelRecommendation(areaCode),
+                "congestion", tourStatService.getVisitorStats(areaCode, getToday())
+        );
+    }
+    public String mapPlaceToAreaCode(String place) {
+        return switch (place) {
+            case "서울" -> "1";
+            case "부산" -> "6";
+            case "제주" -> "39";
+            case "인천" -> "2";
+            case "대전" -> "3";
+            case "광주" -> "5";
+            case "경기" -> "31";
+            default -> "1";
+        };
+    }
+
+    public String recommendAreaCodeByPurpose(String purpose) {
+        return switch (purpose) {
+            case "자연", "휴양" -> "39";
+            case "도시", "쇼핑" -> "1";
+            case "맛집", "식도락" -> "6";
+            default -> "1";
+        };
+    }
+
+    private String getToday() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+    }
+
+
+
+    public String analyzePromptText(String content) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        List<Map<String, String>> messages = List.of(
+                Map.of("role", "system", "content",
+                        "당신은 사용자의 여행 메모를 분석하고, 필요하면 여행지를 추천해주는 AI입니다.\n" +
+                                "- 메모가 구체적인 일정이면 장소를 추출해서 요약해 주세요.\n" +
+                                "- 메모가 의도나 목적만 포함하면 적절한 국내 여행지를 추천해 주세요.\n" +
+                                "- 출력 형식은 JSON으로 다음 구조를 따르세요:\n" +
+                                "{\n" +
+                                "  \"mode\": \"summary\" 또는 \"recommend\",\n" +
+                                "  \"summary\": \"요약문 (mode가 summary일 때만)\",\n" +
+                                "  \"places\": [\"서울\", \"부산\"],\n" +
+                                "  \"purpose\": \"자연\",  // (recommend 모드일 때만)\n" +
+                                "  \"startDate\": \"2025-06-01\",\n" +
+                                "  \"endDate\": \"2025-06-03\"\n" +
+                                "}"
+                ),
+                Map.of("role", "user", "content", content)
+        );
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("model", "gpt-3.5-turbo");
+        body.put("messages", messages);
+        body.put("temperature", 0.7);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(apiKey);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<OpenAIResponse> response = restTemplate.exchange(
+                API_URL,
+                HttpMethod.POST,
+                entity,
+                OpenAIResponse.class
+        );
+
+        return response.getBody().getChoices().get(0).getMessage().getContent();
+    }
+
+
+
 
     public List<String> extractPlacesFromText(String memoText) {
         RestTemplate restTemplate = new RestTemplate();
