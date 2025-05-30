@@ -19,6 +19,6 @@ public class MapPlace {
     private double lng;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memo_id") // ✅ 메모 단위로 연결
+    @JoinColumn(name = "memo_id") //  메모 단위로 연결
     private Memo memo;
 }

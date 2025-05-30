@@ -30,7 +30,7 @@ public class OpenAIService {
     public String summarize(OpenAIRequest requestDto) {
         RestTemplate restTemplate = new RestTemplate();
 
-        // ✅ 프론트와 동일하게 메시지 하나로 합침
+
         List<Map<String, String>> messages = List.of(
                 Map.of("role", "system", "content",
                         "당신은 사용자의 여행 메모를 읽고, 핵심만 간결하게 요약해주는 AI 어시스턴트입니다. " +
@@ -284,7 +284,7 @@ public class OpenAIService {
     }
 
     public String generateAiGuide(String name, String location, LocalDate startDate, LocalDate endDate, Folder.TravelPurpose purpose) {
-        // ✅ 필수값이 누락되면 AI 가이드 생성하지 않음
+
         if (name == null || location == null || startDate == null || endDate == null || purpose == null) {
             return "※ 여행 정보가 부족하여 AI 가이드를 생성할 수 없습니다.";
         }

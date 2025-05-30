@@ -23,7 +23,7 @@ public class FolderService {
     private final UserRepository userRepository;
 
     private final MemoService memoService;
-    private final OpenAIService openAIService; // ✅ 추가
+    private final OpenAIService openAIService;
 
     public Folder createFolder(String name, String location, LocalDate startDate, LocalDate endDate, String imageUrl, Folder.TravelPurpose purpose) {
 
@@ -35,11 +35,11 @@ public class FolderService {
             folder.setLocation(location);
             folder.setStartDate(startDate);
             folder.setEndDate(endDate);
-            folder.setImageUrl(imageUrl); // ✅ 이미지 URL 추가
-            folder.setPurpose(purpose);   // ✅ 여행 목적 추가
-            folder.setStarred(false); // ✅ 누락 방지용
+            folder.setImageUrl(imageUrl);
+            folder.setPurpose(purpose);
+            folder.setStarred(false);
             folder.setUser(user);
-            // ✅ AI 가이드 생성 및 세팅
+
             String guide = openAIService.generateAiGuide(name, location, startDate, endDate, purpose);
             folder.setAiGuide(guide);
 
@@ -62,7 +62,6 @@ public class FolderService {
                     folder.setUser(user);
                     folder.setType("default"); // 선택 사항
                     folder.setEditable(false); // 삭제 방지
-                    // 🛑 AI 가이드 생략 또는 안전하게 처리
                     folder.setAiGuide("기본 폴더입니다.");
 
                     return folderRepository.save(folder);
@@ -84,12 +83,12 @@ public class FolderService {
         Folder folder = folderRepository.findById(folderId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 폴더가 존재하지 않습니다."));
 
-        // 현재 로그인한 유저의 폴더인지 확인
+
         if (!folder.getUser().getId().equals(user.getId())) {
             throw new SecurityException("해당 폴더를 삭제할 권한이 없습니다.");
         }
 
-        // 📌 메모 먼저 삭제
+
         memoService.deleteMemosByFolderId(folderId);
 
         folderRepository.delete(folder);
@@ -111,7 +110,7 @@ public class FolderService {
     public Folder updateFolderColor(Long folderId, String newColor) {
         Folder folder = getFolderByIdAndUserCheck(folderId);
         folder.setColor(newColor);
-        folder.setImageUrl(null); // 이미지 제거 처리 (색상으로 대체 시)
+        folder.setImageUrl(null);
         return folderRepository.save(folder);
     }
 

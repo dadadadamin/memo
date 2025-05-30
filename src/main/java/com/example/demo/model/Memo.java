@@ -65,7 +65,7 @@ public class Memo {
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
-    // ✅ 장소 마커들과의 연관관계 추가
+    // 장소 마커들과의 연관관계 추가
     @OneToMany(mappedBy = "memo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MapPlace> mapPlaces = new ArrayList<>();
 
@@ -80,5 +80,5 @@ public class Memo {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Getter / Setter 생략
+
 }

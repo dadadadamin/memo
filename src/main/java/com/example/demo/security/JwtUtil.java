@@ -21,7 +21,7 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // ✅ JWT 토큰 생성 - email, role 포함
+
     public String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
@@ -32,7 +32,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    // ✅ JWT에서 email 추출
+
     public String extractEmail(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -42,7 +42,7 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    // ✅ JWT에서 role 추출
+
     public String extractRole(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

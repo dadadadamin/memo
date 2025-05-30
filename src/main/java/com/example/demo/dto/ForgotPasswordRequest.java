@@ -3,7 +3,7 @@ package com.example.demo.dto;
 public class ForgotPasswordRequest {
     private String email;
 
-    // Getter & Setter
+
     public String getEmail() {
         return email;
     }

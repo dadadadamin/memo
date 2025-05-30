@@ -53,7 +53,7 @@ public class MemoService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // default 폴더 자동 생성 or 조회
+
         Folder folder = folderRepository.findByUserIdAndName(user.getId(), "default")
                 .orElseGet(() -> {
                     Folder defaultFolder = new Folder();
@@ -116,7 +116,7 @@ public class MemoService {
         res.setStoragePath(memo.getStoragePath());
         res.setCreatedAt(memo.getCreatedAt());
         res.setUpdatedAt(memo.getUpdatedAt());
-      //  res.setStarred(memo.isStarred()); // ✅ 즐겨찾기 반영
+
 
         return res;
     }

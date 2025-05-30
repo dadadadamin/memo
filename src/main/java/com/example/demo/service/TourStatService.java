@@ -25,7 +25,7 @@ public class TourStatService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    // 📊 광역 지자체 관광객 수 조회
+
     public String getVisitorStats(String areaCode, String date) {
         String url = UriComponentsBuilder.fromHttpUrl(dataLabBaseUrl + "/metcoRegnVisitrDDList")
                 .queryParam("serviceKey", apiKey)
@@ -41,7 +41,7 @@ public class TourStatService {
         return restTemplate.getForObject(url, String.class);
     }
 
-    // 💡 지역별 여행 예보 추천
+
     public String getTravelRecommendation(String areaCode) {
         String url = UriComponentsBuilder.fromHttpUrl(tarBaseUrl + "/areaBasedList")
                 .queryParam("serviceKey", apiKey)

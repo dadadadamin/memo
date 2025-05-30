@@ -82,9 +82,8 @@ public class UserApiController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = userService.login(request);
-            // 사용자 객체에서 역할(role) 추출
             User user = userService.findByEmail(request.getEmail());
-            String role = user.getRole(); // ✅ 여기 중요
+            String role = user.getRole();
 
             return ResponseEntity.ok(Map.of("message", "로그인 성공", "token", token));
         } catch (Exception e) {

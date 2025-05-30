@@ -68,7 +68,7 @@ public class MapsService {
                     double lat = ((Number) location.get("lat")).doubleValue();
                     double lng = ((Number) location.get("lng")).doubleValue();
 
-                    return new MapPlaceDto(placeName, lat, lng); // ✅ 메모 없이 DTO 생성
+                    return new MapPlaceDto(placeName, lat, lng);
                 }
             }
 

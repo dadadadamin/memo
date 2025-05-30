@@ -25,7 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
-    private final TokenRepository tokenRepository; // ✅ TokenRepository 주입!
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -34,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // ✅ 회원가입, 로그인은 토큰 검사 없이 통과
+
         if (path.equals("/user") || path.equals("/login") || path.equals("/signup")) {
             filterChain.doFilter(request, response);
             return;
@@ -44,9 +44,9 @@ public class JwtFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7); // ✅ JWT 토큰 추출
+            String token = authHeader.substring(7);
 
-            // ✅ 토큰 유효성 DB에서 확인
+
             Optional<Token> storedToken = tokenRepository.findByToken(token);
             if (storedToken.isEmpty() || storedToken.get().isExpired() || storedToken.get().isRevoked()) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
@@ -54,7 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
 
-            // ✅ JWT에서 사용자 정보 추출
+
             String email = jwtUtil.extractEmail(token);
             String role = jwtUtil.extractRole(token);
 
@@ -71,10 +71,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-//                // 🔍 디버깅 로그 (필요 시 삭제)
-//                System.out.println("✅ 이메일: " + email);
-//                System.out.println("✅ 역할: " + role);
-//                System.out.println("✅ 권한 객체: " + authority.getAuthority());
+
             }
         }
 

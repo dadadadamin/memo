@@ -11,7 +11,7 @@ public class MapPlaceDto {
     private double lat;
     private double lng;
 
-    // Entity → DTO 변환 생성자
+
     public MapPlaceDto(MapPlace entity) {
         this.name = entity.getName();
         this.lat = entity.getLat();

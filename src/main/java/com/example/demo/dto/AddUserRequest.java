@@ -22,13 +22,13 @@ public class AddUserRequest {
     private String password;
     
     @NotBlank(message = "비밀번호 확인을 입력해주세요.")
-    private String passwordConfirm; // ✅ 비밀번호 확인 필드 추가
+    private String passwordConfirm;
 
     private String gender;
 
-    private String birthDate; // ✅ 생년월일 (YYYY-MM-DD)
+    private String birthDate;
 
 
     @Size(max = 50, message = "직업은 최대 50자까지 입력 가능합니다.")
-    private String job;  // ✅ 직업
+    private String job;
 }

@@ -27,10 +27,10 @@ public class FolderController {
         String location = folderRequest.getLocation();
         LocalDate startDate = folderRequest.getStartDate();
         LocalDate endDate = folderRequest.getEndDate();
-        String imageUrl = folderRequest.getImageUrl(); // ✅ imageUrl 추가
+        String imageUrl = folderRequest.getImageUrl();
         Folder.TravelPurpose purpose = folderRequest.getPurpose();
 
-        Folder folder = folderService.createFolder(name, location, startDate, endDate, imageUrl, purpose); // ✅ 인자 전달
+        Folder folder = folderService.createFolder(name, location, startDate, endDate, imageUrl, purpose);
         return ResponseEntity.ok(folder);
     }
 
@@ -38,7 +38,7 @@ public class FolderController {
     @PostMapping("/quick")
     public ResponseEntity<?> saveQuickMemo(@RequestBody MemoRequest request,
                                            Authentication authentication) {
-        String email = authentication.getName(); // ✅ JWT에서 추출한 사용자 email
+        String email = authentication.getName();
         return ResponseEntity.ok(memoService.createQuickMemo(request, email));
     }
 
@@ -105,7 +105,7 @@ public class FolderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getFolderById(@PathVariable Long id) {
-        Folder folder = folderService.getFolderByIdAndUserCheck(id); // ✅ 권한 체크 포함된 메서드 사용
+        Folder folder = folderService.getFolderByIdAndUserCheck(id);
         return ResponseEntity.ok(folder);
     }
 

@@ -20,7 +20,7 @@ public class MemoController {
     private final MemoService memoService;
 
 
-    // MemoController.java
+
     @PostMapping("/quick")
     public ResponseEntity<?> saveQuickMemo(@RequestBody MemoRequest request,
                                            Authentication authentication) {
@@ -30,7 +30,7 @@ public class MemoController {
 
     @PostMapping
     public ResponseEntity<MemoResponse> createMemo(@RequestBody MemoRequest request, Authentication authentication) {
-        String email = authentication.getName(); // JWT에서 추출된 이메일
+        String email = authentication.getName();
         return ResponseEntity.ok(memoService.createMemo(request, email));
     }
 

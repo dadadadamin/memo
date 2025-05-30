@@ -29,7 +29,6 @@ public class PasswordController {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isPresent()) {
-            // 여기서 이메일 전송 또는 토큰 생성 로직 추가 가능
             System.out.println("이메일이 존재합니다");
             return ResponseEntity.ok("이메일이 존재합니다.");
         } else {

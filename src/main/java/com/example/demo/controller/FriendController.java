@@ -36,8 +36,8 @@ public class FriendController {
 
     @GetMapping("/list")
     public ResponseEntity<List<FriendRequest>> getFriendList() {
-        User currentUser = userService.getCurrentUser(); // 현재 로그인한 사용자
-        List<FriendRequest> friends = friendService.getFriends(currentUser); // DTO 반환
+        User currentUser = userService.getCurrentUser();
+        List<FriendRequest> friends = friendService.getFriends(currentUser);
         return ResponseEntity.ok(friends);
     }
 

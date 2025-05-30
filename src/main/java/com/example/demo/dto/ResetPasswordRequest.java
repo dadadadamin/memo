@@ -5,7 +5,7 @@ public class ResetPasswordRequest {
     private String newPassword;
     private String confirmPassword;
 
-    // Getter & Setter
+
     public String getEmail() {
         return email;
     }

@@ -8,6 +8,6 @@ import java.util.Optional;
 //JpaRepository<User, Long> 또는 CrudRepository<User, Long> 를 상속 받아 데이터 조회, 저장, 삭제 등의 기능 제공.
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email); // 이메일로 사용자 정보를 가져옴
-    // ✅ 이메일로 사용자 삭제
+    //  이메일로 사용자 삭제
     void deleteById(Long id);
 }

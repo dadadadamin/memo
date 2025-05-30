@@ -10,12 +10,12 @@ import java.time.LocalDate;
 @Getter
 public class FolderRequest {
     private String name;
-    private String location;       // ✅ 추가
-    private LocalDate startDate;   // ✅ 추가
-    private LocalDate endDate;     // ✅ 추가
+    private String location;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String color;
-    private String imageUrl; // ✅ 추가
-    private Folder.TravelPurpose purpose; // ✅ 추가
+    private String imageUrl;
+    private Folder.TravelPurpose purpose;
 
     public String getName() {
         return name;

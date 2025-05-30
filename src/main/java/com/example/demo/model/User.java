@@ -22,9 +22,9 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class User implements UserDetails { // UserDetails를 상속받아 인증 객체로 사용
+public class User implements UserDetails {
 
-	private static final long serialVersionUID = 1L; // serialVersionUID 추가
+	private static final long serialVersionUID = 1L;
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //AUTO_INCREMENT 적용
@@ -39,18 +39,18 @@ public class User implements UserDetails { // UserDetails를 상속받아 인증
     private String password;
     
     @Column(nullable = true)
-    private String gender; // ✅ 성별
+    private String gender;
 
     @Column(nullable = true)
-    private String birthDate; // ✅ 생년월일
+    private String birthDate;
 
     @Column(nullable = true)
-    private String job; // ✅ 직업
+    private String job;
 
     @Column(nullable = false)
-    private String role= "ROLE_USER";// "ROLE_USER", "ROLE_ADMIN"
+    private String role= "ROLE_USER";
     
-    @Builder //빌더 패턴을 사용하여 객체 생성
+    @Builder
     public User(String email, String password, String gender, String birthDate, String job, String role) {
         this.email = email;
         this.password = password;
@@ -64,7 +64,7 @@ public class User implements UserDetails { // UserDetails를 상속받아 인증
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role)); // ✅ 고침
+        return List.of(new SimpleGrantedAuthority(this.role));
     }
 
     @Override
@@ -102,7 +102,7 @@ public class User implements UserDetails { // UserDetails를 상속받아 인증
         return true; // true -> 사용 가능
     }
 
-    // User.java 하단에 추가
+
     public void setPassword(String password) {
         this.password = password;
     }
